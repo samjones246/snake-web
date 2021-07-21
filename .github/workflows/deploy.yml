@@ -11,12 +11,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: List files
-        run: ls -la
+      - name: Checkout files
+        uses: actions/checkout@v2
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: 'temp'
-      - name: Populate known_hosts
-        run: ssh-keyscan barelyfunctional.tech >> ~/.ssh/known_hosts
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+      - name: Deploy with rsync
+        run: rsync -avzn ./snake-web/* ec2-user@barelyfunctional.tech:/usr/share/nginx/html/ 
