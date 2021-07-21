@@ -16,7 +16,7 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: 'temp'
-      - name: Populate known_hosts:
+      - name: Populate known_hosts
         run: ssh-keyscan -H barelyfunctional.tech >> ~/.ssh/known_hosts
       - name: List files
         run: ls
