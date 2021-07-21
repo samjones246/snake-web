@@ -11,11 +11,14 @@ const middleRow = Math.floor(numRows / 2)
 const middleCol = Math.floor(numCols / 2)
 const canvas = document.getElementById("canvas")
 const scoreLabel = document.getElementById("score")
+const scoreValLabel = document.getElementById("scoreval")
 const goLabel = document.getElementById("gameover")
 const highLabel = document.getElementById("highscore")
+const highValLabel = document.getElementById("highscoreval")
 const ctx = canvas.getContext("2d")
 let grow = 2;
 let score = 0;
+let highscore = 0;
 let alive = true;
 
 const fps = 10;
@@ -83,7 +86,7 @@ function moveHead(direction){
     if (r==food[0] && c==food[1]){
         score++;
         grow++;
-        scoreLabel.textContent = `Score: ${score}`
+        scoreValLabel.textContent = String(score).padStart(3, '0')
         foodSound.currentTime = 0;
         foodSound.play()
         placeFood()
@@ -100,9 +103,12 @@ function gameOver(){
     direction = -1;
     alive=false;
     goLabel.hidden = false;
-    scoreLabel.textContent = "Score: 0"
     goSound.currentTime = 0;
     goSound.play();
+    if(score > highscore){
+        highscore = score;
+        highValLabel.textContent = String(score).padStart(3, "0")
+    }
 }
 
 //cw = getClosestFit(cw, numCols, vw)
@@ -112,8 +118,17 @@ canvas.height = numRows * ch
 
 canvas.style.top = (vh / 2) - (canvas.height / 2)
 canvas.style.left = (vw / 2) - (canvas.width / 2)
+
 scoreLabel.style.left = canvas.style.left
 scoreLabel.style.top = parseInt(canvas.style.top) - 60
+highLabel.style.left = canvas.style.left
+highLabel.style.top = parseInt(scoreLabel.style.top) - 40
+
+scoreValLabel.style.left = parseInt(canvas.style.left) + canvas.width - 74
+scoreValLabel.style.top = scoreLabel.style.top
+highValLabel.style.left = scoreValLabel.style.left
+highValLabel.style.top = highLabel.style.top
+
 goLabel.style.left = canvas.style.left
 goLabel.style.top = parseInt(canvas.style.top) + canvas.height - 15
 
@@ -149,6 +164,7 @@ function reset(){
     alive = true
     score = 0
     goLabel.hidden = true;
+    scoreValLabel.textContent = "000"
     placeFood()
     drawSnake()
 }
