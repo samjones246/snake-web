@@ -130,7 +130,6 @@ function moveHead(direction){
 }
 
 function gameOver(){
-    console.log("game over")
     direction = -1;
     alive=false;
     goLabel.hidden = false;
@@ -181,12 +180,14 @@ function step() {
         return
     }
     moveHead(direction)
+    if(!alive){
+        return
+    }
     drawSnake()
     moves++
 }
 
 function reset(){
-    console.log("Reset")
     direction = -1
     nextDir = -1
     grow = 2
