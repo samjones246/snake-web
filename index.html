@@ -4,15 +4,15 @@
 <link rel="stylesheet" href="styles/snake.css">
 </head>
 <body>
-<h1 class="text" id="score">Score:</h1>
-<h1 class="text" id="scoreval">000</h1> 
-<h1 class="text" id="highscore">High Score:</h1>
-<h1 class="text" id="highscoreval">000</h1>
-<div id="game">   
-    <canvas id="canvas"></canvas>
-    <h1 class="text" id="pause" hidden>PAUSED</h1>
+<div id="game" class="hoz-cent">
+    <h1 class="text" id="score">Score:</h1>
+    <h1 class="text right" id="scoreval">000</h1>
+    <h1 class="text" id="highscore">High Score:</h1>
+    <h1 class="text right" id="highscoreval">000</h1>
+    <canvas id="canvas" class="hoz-cent"></canvas>
+    <h1 class="text full-cent" id="pause" hidden>PAUSED</h1>
+    <h2 class="text" id="gameover" hidden>Restart: ESC</h1>
 </div>
-<h2 class="text" id="gameover" hidden>Restart: ESC</h1>
 </body>
 <script src="scripts/snake.js" type="text/javascript"></script>
 </html>

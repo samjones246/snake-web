@@ -155,20 +155,17 @@ canvas.width = numCols * cw
 canvas.height = numRows * ch
 
 canvas.style.top = (vh / 2) - (canvas.height / 2)
-canvas.style.left = (vw / 2) - (canvas.width / 2)
 
-scoreLabel.style.left = canvas.style.left
-scoreLabel.style.top = parseInt(canvas.style.top) - 60
-highLabel.style.left = canvas.style.left
+scoreLabel.style.top = parseInt(canvas.style.top) - 40
+
 highLabel.style.top = parseInt(scoreLabel.style.top) - 40
 
-scoreValLabel.style.left = parseInt(canvas.style.left) + canvas.width - 74
 scoreValLabel.style.top = scoreLabel.style.top
-highValLabel.style.left = scoreValLabel.style.left
+
 highValLabel.style.top = highLabel.style.top
 
 goLabel.style.left = canvas.style.left
-goLabel.style.top = parseInt(canvas.style.top) + canvas.height - 15
+goLabel.style.top = parseInt(canvas.style.top) + canvas.height + 10
 
 console.log(`Viewport: ${vw}x${vh}`)
 console.log(`Cell: ${cw}x${ch}`)

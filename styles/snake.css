@@ -7,6 +7,11 @@
     position: absolute;
     font-family: "Retro";
     color: black;
+    margin: 0;
+}
+
+.right {
+    right: 0;
 }
 
 .best {
@@ -14,26 +19,45 @@
 }
 
 canvas {
-    position: fixed;
+    position: absolute;
     display: block;
     border: 2px solid black;
     background-color: black;
 }
 
 #pause {
-    position: absolute;
-    margin: 0;
-    left: 50%;
-    top: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
     color: white;
 }
 
 #game {
     position: absolute;
-    left: 33%;
-    width: 33%;
+    width: 66.7vh;
     top: 0;
     height: 100%;
+    /*border: 2px solid blue;*/
+}
+
+.hoz-cent {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+}
+
+.vert-cent {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+}
+
+.full-cent {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
