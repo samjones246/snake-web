@@ -1,0 +1,22 @@
+# Deploy the application to the production server (barelyfunctional.tech)
+
+name: deploy
+
+on:
+  push:
+    branches:
+      - dev
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: 'temp'
+      - name: Populate known_hosts:
+        run: ssh-keyscan -H barelyfunctional.tech >> ~/.ssh/known_hosts
+      - name: List files
+        run: ls
