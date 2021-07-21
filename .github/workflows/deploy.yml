@@ -11,12 +11,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: List files
+        run: ls -la
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: 'temp'
       - name: Populate known_hosts
-        run: ssh-keyscan -H barelyfunctional.tech >> ~/.ssh/known_hosts
-      - name: List files
-        run: ls
+        run: ssh-keyscan barelyfunctional.tech >> ~/.ssh/known_hosts
