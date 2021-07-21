@@ -6,6 +6,11 @@
 .text {
     position: absolute;
     font-family: "Retro";
+    color: black;
+}
+
+.best {
+    color: gold;
 }
 
 canvas {

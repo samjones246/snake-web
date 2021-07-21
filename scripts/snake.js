@@ -19,6 +19,7 @@ const ctx = canvas.getContext("2d")
 let grow = 2;
 let score = 0;
 let highscore = 0;
+let newBest = false;
 let alive = true;
 
 const fps = 10;
@@ -28,6 +29,7 @@ let opposites = [2,3,0,1]
 
 const foodSound = new Audio("sounds/collect.wav")
 const goSound = new Audio("sounds/game-over.wav")
+const bestSound = new Audio("sounds/high-score.wav")
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -87,8 +89,14 @@ function moveHead(direction){
         score++;
         grow++;
         scoreValLabel.textContent = String(score).padStart(3, '0')
-        foodSound.currentTime = 0;
-        foodSound.play()
+        if(score > highscore && !newBest && highscore > 0){
+            scoreValLabel.classList.add("best")
+            newBest = true;
+            bestSound.play()
+        }else{
+            foodSound.currentTime = 0;
+            foodSound.play()
+        }
         placeFood()
     }
     if (grow){
@@ -165,6 +173,8 @@ function reset(){
     score = 0
     goLabel.hidden = true;
     scoreValLabel.textContent = "000"
+    scoreValLabel.classList.remove("best")
+    newBest = false;
     placeFood()
     drawSnake()
 }
