@@ -1,0 +1,15 @@
+@font-face {
+    font-family: "Retro";
+    src: url("../fonts/retro-gaming.ttf") format("truetype");
+}
+
+.text {
+    position: absolute;
+    font-family: "Retro";
+}
+
+canvas {
+    position: absolute;
+    display: block;
+    border: 2px solid black;
+}
