@@ -22,7 +22,8 @@ const highValLabel = document.getElementById("highscoreval")
 const ctx = canvas.getContext("2d")
 let grow = 2;
 let score = 0;
-let highscore = 0;
+let highscore = window.localStorage["highscore"] || 0;
+highValLabel.textContent = String(highscore).padStart(3, '0')
 let newBest = false;
 let alive = true;
 
@@ -141,6 +142,7 @@ function gameOver(){
     goSound.play();
     if(score > highscore){
         highscore = score;
+        window.localStorage["highscore"] = highscore
         highValLabel.textContent = String(score).padStart(3, "0")
     }
 }
