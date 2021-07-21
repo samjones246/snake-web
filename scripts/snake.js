@@ -41,12 +41,24 @@ function getClosestFit(target, num, full){
 
 function drawSnake(){
     ctx.clearRect(0,0,vw,vh)
+    ctx.fillStyle = "rgb(0,255,0)"
     snake.forEach(pos => {
         let y = pos[0] * ch
         let x = pos[1] * cw
-        ctx.fillStyle = "rgb(0,255,0)"
         ctx.fillRect(x+1,y+1,cw-2,ch-2)
     })
+    ctx.save()
+    ctx.translate(snake[0][1] * cw + cw / 2, snake[0][0] * ch + ch / 2)
+    let angle = [270,0,90,180][direction];
+    ctx.rotate(angle * Math.PI / 180)
+    let pad = 2
+    let eyeX = cw / 2 - pad * 5
+    let eyeY = -ch / 2 + pad * 2
+    let eyeW = pad * 3
+    let eyeH = pad * 3
+    ctx.fillStyle = "rgb(0,0,255)"
+    ctx.clearRect(eyeX, eyeY, eyeW, eyeH) 
+    ctx.restore()
     let y = food[0] * ch
     let x = food[1] * cw
     ctx.fillStyle = "rgb(255,0,0)"
