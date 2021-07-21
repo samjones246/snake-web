@@ -19,6 +19,7 @@ const scoreValLabel = document.getElementById("scoreval")
 const goLabel = document.getElementById("gameover")
 const highLabel = document.getElementById("highscore")
 const highValLabel = document.getElementById("highscoreval")
+const pauseLabel = document.getElementById("pause")
 const ctx = canvas.getContext("2d")
 let grow = 2;
 let score = 0;
@@ -232,6 +233,7 @@ document.addEventListener('keydown', event => {
     }
     if(event.code === "Space"){
         paused = !paused
+        pauseLabel.hidden = !paused;
     }
     if (paused){
         return
