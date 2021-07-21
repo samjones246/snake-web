@@ -51,13 +51,24 @@ function drawSnake(){
     ctx.translate(snake[0][1] * cw + cw / 2, snake[0][0] * ch + ch / 2)
     let angle = [270,0,90,180][direction];
     ctx.rotate(angle * Math.PI / 180)
-    let pad = 2
-    let eyeX = cw / 2 - pad * 5
-    let eyeY = -ch / 2 + pad * 2
-    let eyeW = pad * 3
-    let eyeH = pad * 3
-    ctx.fillStyle = "rgb(0,0,255)"
-    ctx.clearRect(eyeX, eyeY, eyeW, eyeH) 
+    const pad = 2
+    const eyeX = cw / 2 - pad * 5
+    const eyeY = -ch / 2 + pad * 2
+    const eyeW = pad * 3
+    const eyeH = pad * 3
+    const tongueL = 5;
+    ctx.clearRect(eyeX, eyeY, eyeW, eyeH)
+    ctx.strokeStyle = "rgb(255,0,0)"
+    ctx.lineWidth = pad
+    const tongueStartX = cw / 2 - tongueL
+    const tongueStartY = ch / 4 - pad / 2
+    ctx.beginPath()
+    ctx.moveTo(tongueStartX, tongueStartY)
+    ctx.lineTo(tongueStartX + tongueL, tongueStartY)
+    ctx.lineTo(tongueStartX + tongueL * 2, tongueStartY + tongueL / 2) 
+    ctx.moveTo(tongueStartX + tongueL, tongueStartY)
+    ctx.lineTo(tongueStartX + tongueL * 2, tongueStartY - tongueL / 2) 
+    ctx.stroke()
     ctx.restore()
     let y = food[0] * ch
     let x = food[1] * cw
