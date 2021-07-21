@@ -26,6 +26,7 @@ let highscore = window.localStorage["highscore"] || 0;
 highValLabel.textContent = String(highscore).padStart(3, '0')
 let newBest = false;
 let alive = true;
+let paused = false;
 
 const fps = 10;
 const moveEvery = 1000 / fps
@@ -178,7 +179,7 @@ let direction, nextDir, moves;
 reset()
 
 function step() {
-    if(!alive){
+    if(!alive || paused){
         return
     }
     direction = nextDir
@@ -228,6 +229,12 @@ document.addEventListener('keydown', event => {
     }
     if (!alive){
         return;
+    }
+    if(event.code === "Space"){
+        paused = !paused
+    }
+    if (paused){
+        return
     }
     codes = ["ArrowUp","ArrowRight","ArrowDown","ArrowLeft"]
     newDir = codes.indexOf(event.code)
