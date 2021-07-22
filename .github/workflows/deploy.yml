@@ -19,4 +19,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
       - name: Deploy with rsync
-        run: rsync -avz * ec2-user@barelyfunctional.tech:/usr/share/nginx/html/ 
+        run: rsync -avz front/* ec2-user@barelyfunctional.tech:/usr/share/nginx/html/ 
