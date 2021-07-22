@@ -2,19 +2,16 @@ function setScore(val){
     console.log("Nice try")
 }
 ;(function(){
+
+// Constants
 const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
 const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-let snake = []
-let food = []
 const numCols = 20
 const numRows = 20
 const cwMax = 30
 const chMax = 30
-let cw = Math.min(cwMax, vw / numCols)
-let ch = Math.min(chMax, (vh * (2/3)) / numCols)
-cw = Math.min(cw,ch)
-ch = Math.min(cw,ch)
-const initLength = 1
+const cw = Math.min(Math.min(cwMax, vw / numCols), Math.min(chMax, (vh * (2/3)) / numCols))
+const ch = cw;
 const middleRow = Math.floor(numRows / 2)
 const middleCol = Math.floor(numCols / 2)
 const canvas = document.getElementById("canvas")
@@ -25,6 +22,17 @@ const highLabel = document.getElementById("highscore")
 const highValLabel = document.getElementById("highscoreval")
 const pauseLabel = document.getElementById("pause")
 const ctx = canvas.getContext("2d")
+const fps = 10;
+const moveEvery = 1000 / fps
+const opposites = [2,3,0,1]
+const foodSound = new Audio("sounds/collect.wav")
+const goSound = new Audio("sounds/game-over.wav")
+const bestSound = new Audio("sounds/high-score.wav")
+const inputBufferMax = 2
+
+// State variables
+let snake = []
+let food = []
 let grow = 2;
 let score = 0;
 let highscore = window.localStorage["highscore"] || 0;
@@ -32,35 +40,27 @@ highValLabel.textContent = String(highscore).padStart(3, '0')
 let newBest = false;
 let alive = true;
 let paused = false;
-
-const fps = 10;
-const moveEvery = 1000 / fps
-
-let opposites = [2,3,0,1]
-
-const foodSound = new Audio("sounds/collect.wav")
-const goSound = new Audio("sounds/game-over.wav")
-const bestSound = new Audio("sounds/high-score.wav")
-
 let inputBuffer = []
-const inputBufferMax = 2
+let direction;
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+// Functions
 
-function getClosestFit(target, num, full){
-    return target + (full - (num * target)) / num
-}
-
-function drawSnake(){
+/*
+    Redraw the canvas to reflect the current state (snake and food positions)
+*/
+function draw(){
+    // Clear canvas before drawing
     ctx.clearRect(0,0,vw,vh)
+
+    // Draw each segment of the snake
     ctx.fillStyle = "rgb(0,255,0)"
     snake.forEach(pos => {
         let y = pos[0] * ch
         let x = pos[1] * cw
         ctx.fillRect(x+1,y+1,cw-2,ch-2)
     })
+
+    // Draw the snake's eye and tongue
     ctx.save()
     ctx.translate(snake[0][1] * cw + cw / 2, snake[0][0] * ch + ch / 2)
     let angle = [270,0,90,180][direction];
@@ -84,12 +84,17 @@ function drawSnake(){
     ctx.lineTo(tongueStartX + tongueL * 2, tongueStartY - tongueL / 2) 
     ctx.stroke()
     ctx.restore()
+
+    // Draw the food
     let y = food[0] * ch
     let x = food[1] * cw
     ctx.fillStyle = "rgb(255,0,0)"
     ctx.fillRect(x+1,y+1,cw-2,ch-2)
 }
 
+/*
+    Check if the specified row and column is occupied by the snake or is outside the play area
+*/
 function checkCollision(r,c){
     let col = false;
     snake.forEach(seg => {
@@ -100,7 +105,13 @@ function checkCollision(r,c){
     return col || r < 0 || c < 0 || r >= numRows || c >= numCols;
 }
 
+/*
+    Move the snake one cell in the specified direction
+    If this move causes the snake to collect food, score is incremented and new food is spawned
+    If this move causes the snake to collide with itself or a wall, a game over is triggered
+*/
 function moveHead(direction){
+    // Get new head position
     r = snake[0][0]
     c = snake[0][1]
     switch (direction){
@@ -117,11 +128,17 @@ function moveHead(direction){
             c--;
             break;
     }
+
+    // Collision? Dead
     if(checkCollision(r,c)){
         gameOver()
         return
     }
+
+    // Place the new segment at the front of the snake
     snake = [[r,c], ...snake]
+
+    // Check for food collection, respond accordingly
     if (r==food[0] && c==food[1]){
         score++;
         grow++;
@@ -136,6 +153,8 @@ function moveHead(direction){
         }
         placeFood()
     }
+
+    // Delete tail if not growing
     if (grow){
         grow --;
     }else{
@@ -143,9 +162,13 @@ function moveHead(direction){
     }
 }
 
+
+/*
+    Stop play, update high score if necessary.
+    Triggered when snake collides with self or wall
+*/
 function gameOver(){
     alive=false;
-    inputBuffer = []
     direction = -1;
     goLabel.hidden = false;
     goSound.currentTime = 0;
@@ -157,33 +180,25 @@ function gameOver(){
     }
 }
 
-//cw = getClosestFit(cw, numCols, vw)
-//ch = getClosestFit(ch, numRows, vh)
-canvas.width = numCols * cw
-canvas.height = numRows * ch
+/*
+    Places canvas and label elements at correct positions on screen
+*/
+function initHtmlElements(){
+    canvas.width = numCols * cw
+    canvas.height = numRows * ch
+    canvas.style.top = (vh / 2) - (canvas.height / 2)
+    scoreLabel.style.top = parseInt(canvas.style.top) - 40
+    highLabel.style.top = parseInt(scoreLabel.style.top) - 40
+    scoreValLabel.style.top = scoreLabel.style.top
+    highValLabel.style.top = highLabel.style.top
+    goLabel.style.left = canvas.style.left
+    goLabel.style.top = parseInt(canvas.style.top) + canvas.height + 10
+}
 
-canvas.style.top = (vh / 2) - (canvas.height / 2)
-
-scoreLabel.style.top = parseInt(canvas.style.top) - 40
-
-highLabel.style.top = parseInt(scoreLabel.style.top) - 40
-
-scoreValLabel.style.top = scoreLabel.style.top
-
-highValLabel.style.top = highLabel.style.top
-
-goLabel.style.left = canvas.style.left
-goLabel.style.top = parseInt(canvas.style.top) + canvas.height + 10
-
-console.log(`Viewport: ${vw}x${vh}`)
-console.log(`Cell: ${cw}x${ch}`)
-console.log(`Grid ${numCols}x${numRows}`)
-console.log(`Canvas: ${canvas.width}x${canvas.height}`)
-
-// Init snake
-let direction, nextDir, moves;
-reset()
-
+/*
+    Main game loop function. Called at every frame to advance state.
+    Should be used with setInterval
+*/
 function step() {
     if(!alive || paused){
         return
@@ -198,11 +213,15 @@ function step() {
     if(!alive){
         return
     }
-    drawSnake()
+    draw()
     moves++
 }
 
+/*
+    Set state variables back to default values, ready for a new game to begin
+*/
 function reset(){
+    inputBuffer = []
     direction = -1
     nextDir = -1
     grow = 2
@@ -215,9 +234,12 @@ function reset(){
     scoreValLabel.classList.remove("best")
     newBest = false;
     placeFood()
-    drawSnake()
+    draw()
 }
 
+/*
+    Place the food in a new random location
+*/
 function placeFood(){
     let locs = []
     for(let r=0;r<numRows;r++){
@@ -231,6 +253,9 @@ function placeFood(){
     food = locs[i]
 }
 
+/*
+    Input listener, responds accordingly to relevant key-presses
+*/
 document.addEventListener('keydown', event => {
     if(event.code === "Escape"){
         reset()
@@ -256,5 +281,9 @@ document.addEventListener('keydown', event => {
     }
 })
 
-setInterval(step, moveEvery)
+// Initialize and begin game loop
+initHtmlElements();
+reset();
+setInterval(step, moveEvery);
+
 }());
