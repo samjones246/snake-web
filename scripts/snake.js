@@ -242,7 +242,11 @@ document.addEventListener('keydown', event => {
     }
     codes = ["ArrowUp","ArrowRight","ArrowDown","ArrowLeft"]
     newDir = codes.indexOf(event.code)
-    if (newDir !== -1 && newDir !== opposites[(inputBuffer.length === 0 ? direction : inputBuffer[0])] && inputBuffer.length <= inputBufferMax){
+    lastDir = inputBuffer.length === 0 ? direction : inputBuffer[0]
+    if (newDir !== -1 && 
+        newDir !== lastDir && 
+        newDir !== opposites[lastDir] && 
+        inputBuffer.length <= inputBufferMax){
         inputBuffer.push(newDir)
     }
 })
