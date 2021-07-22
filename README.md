@@ -1,2 +1,16 @@
 # snake-web
-The classic game Snake, re-implemented in pure JS
+A vanilla JS implementation of the classic game Snake. Yes, this game has been done too many times.
+
+## Features
+ - Snake
+
+## Controls
+ - Movement: Arrow keys
+ - Restart: Escape
+ - Pause: Space bar
+
+ ## To-do
+ - Controls listing
+ - Options panel
+ - Leaderboards (daily, weekly, all time)
+ - Multiplayer
