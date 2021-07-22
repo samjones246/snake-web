@@ -140,8 +140,9 @@ function moveHead(direction){
 }
 
 function gameOver(){
-    direction = -1;
     alive=false;
+    inputBuffer = []
+    direction = -1;
     goLabel.hidden = false;
     goSound.currentTime = 0;
     goSound.play();
