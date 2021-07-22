@@ -38,6 +38,9 @@ const foodSound = new Audio("sounds/collect.wav")
 const goSound = new Audio("sounds/game-over.wav")
 const bestSound = new Audio("sounds/high-score.wav")
 
+let inputBuffer = []
+const inputBufferMax = 2
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -180,7 +183,9 @@ function step() {
     if(!alive || paused){
         return
     }
-    direction = nextDir
+    if (inputBuffer.length > 0){
+        direction = inputBuffer.splice(0,1)[0]
+    }
     if (direction === -1){
         return
     }
@@ -237,8 +242,8 @@ document.addEventListener('keydown', event => {
     }
     codes = ["ArrowUp","ArrowRight","ArrowDown","ArrowLeft"]
     newDir = codes.indexOf(event.code)
-    if (newDir !== -1 && newDir !== opposites[direction]){
-        nextDir = newDir
+    if (newDir !== -1 && newDir !== opposites[(inputBuffer.length === 0 ? direction : inputBuffer[0])] && inputBuffer.length <= inputBufferMax){
+        inputBuffer.push(newDir)
     }
 })
 
