@@ -1,11 +1,18 @@
 from django.http import HttpResponse, HttpRequest
-from django.http.response import JsonResponse
+from django.http.response import HttpResponseBadRequest, JsonResponse
 from .models import HighScore
 from django.core import serializers
 from django.utils import timezone
 import logging
 
 logger = logging.getLogger(__name__)
+
+periods = {
+    "alltime": 0,
+    "yearly": 1,
+    "monthly": 2,
+    "daily": 3
+}
 
 
 def index(request):
@@ -58,4 +65,38 @@ def submit(request : HttpRequest):
         "yearly":is_yearly_best, 
         "alltime":is_alltime_best
     })
+
+def rank(request, period, day=None, month=None, year=None):
+    try:
+        level = periods[period]
+    except:
+        return HttpResponseBadRequest(f"Invalid time period '{period}', must be 'daily', 'monthly', 'yearly' or 'alltime'")
+
+    today = timezone.now()
+    day = day or today.day
+    month = month or today.month
+    year = year or today.year
+
+    name = request.GET.get("name")
+    user = HighScore.objects.filter(name=name)
+    other = HighScore.objects.exclude(name=name)
+    
+    if level >= 1:
+        user = user.filter(timestamp__year=year)
+        other = other.filter(timestamp__year=year)
+    if level >= 2:
+        user = user.filter(timestamp__month=month)
+        other = other.filter(timestamp__month=month)
+    if level >= 3:
+        user = user.filter(timestamp__day=day)
+        other = other.filter(timestamp__day=day)
+    try:
+        best = user.order_by("-score")[0]
+    except:
+        return HttpResponse(-1)
+    _rank = other.filter(score__gt=best.score).count()
+    return HttpResponse(_rank)
+        
+    
+
 
