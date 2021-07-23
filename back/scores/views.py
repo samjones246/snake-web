@@ -1,4 +1,5 @@
 from django.http import HttpResponse, HttpRequest
+from django.http.response import JsonResponse
 from .models import HighScore
 from django.core import serializers
 from django.utils import timezone
@@ -33,9 +34,28 @@ def submit(request : HttpRequest):
     # TODO: This should be POST
     name = request.GET.get("name")
     score = int(request.GET.get("score"))
-    record = HighScore(name=name, score=score, timestamp=timezone.now())
-    try:
-        record.save()
-        return HttpResponse("Success.")
-    except:
-        return HttpResponse("Failed to save score", status=500)
+    timestamp=timezone.now()
+    alltime = HighScore.objects.filter(name=name)
+    yearly = alltime.filter(timestamp__year=timestamp.year)
+    monthly = yearly.filter(timestamp__month=timestamp.month)
+    daily = monthly.filter(timestamp__day=timestamp.day)
+
+    is_daily_best = daily.count() == 0 or score > daily.order_by("-score")[0].score
+    is_monthly_best = monthly.count() == 0 or score > monthly.order_by("-score")[0].score
+    is_yearly_best = yearly.count() == 0 or score > yearly.order_by("-score")[0].score
+    is_alltime_best = alltime.count() == 0 or score > alltime.order_by("-score")[0].score
+
+    if is_daily_best:
+        record = HighScore(name=name, score=score, timestamp=timestamp)
+        try:
+            record.save()
+        except:
+            return HttpResponse("Failed to save score", status=500)
+    
+    return JsonResponse({
+        "daily":is_daily_best, 
+        "monthly":is_monthly_best, 
+        "yearly":is_yearly_best, 
+        "alltime":is_alltime_best
+    })
+
