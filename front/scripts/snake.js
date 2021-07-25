@@ -1,7 +1,6 @@
 function setScore(val){
     console.log("Nice try")
 }
-;(function(){
 
 // Constants
 const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
@@ -288,5 +287,3 @@ document.addEventListener('keydown', event => {
 initHtmlElements();
 reset();
 setInterval(step, moveEvery);
-
-}());
