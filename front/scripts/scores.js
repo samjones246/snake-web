@@ -38,8 +38,8 @@ function populateScores(){
         for(let i=0;i<10;i++){
             let name, score
             if(i < scores.length){
-                name = scores[i].fields.name
-                score = scores[i].fields.score
+                name = scores[i].name
+                score = scores[i].score
             }else{
                 name = "-"
                 score = "-"

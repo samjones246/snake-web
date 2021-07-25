@@ -1,9 +1,11 @@
+import json
 from django.http import HttpResponse, HttpRequest
 from django.http.response import HttpResponseBadRequest, JsonResponse
 from .models import HighScore
 from django.core import serializers
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Max, Q
 import logging
 
 logger = logging.getLogger(__name__)
@@ -30,12 +32,13 @@ def retrieve(request : HttpRequest, year=None, month=None, day=None):
     name = request.GET.get("name")
     if name:
         data = data.filter(name=name)
-    data = data.order_by("-score")
+    data = data.values("name").annotate(score=Max("score")).order_by("-score")
     startn = int(request.GET.get("startn", default=0))
     n = int(request.GET.get("n", default=-1))
     data = data[startn:(startn + n if n >= 0 else None)]
+    print(data, flush=True)
     if not request.GET.get("human"):
-        data = serializers.serialize("json", data)
+        data = json.dumps(list(data))
     return HttpResponse(data)
 
 @csrf_exempt
