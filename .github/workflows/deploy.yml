@@ -46,7 +46,7 @@ jobs:
           known_hosts: 'TEMP'
 
       - name: Populate known hosts
-        run: ssh-keyscan ${{ steps.dpl_setup.outputs.host }} > .ssh/known_hosts
+        run: ssh-keyscan ${{ steps.dpl_setup.outputs.host }} > ~/.ssh/known_hosts
 
       - name: Deploy with rsync
         run: rsync -avz ./* ${{ steps.dpl_setup.outputs.user }}@${{ steps.dpl_setup.outputs.host }}:/home/${{ steps.dpl_setup.outputs.user }}/${{ steps.dpl_setup.outputs.host }}/
