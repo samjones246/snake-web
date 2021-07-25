@@ -13,4 +13,7 @@ A vanilla JS implementation of the classic game Snake. Yes, this game has been d
  - Controls listing
  - Options panel
  - Leaderboards (daily, weekly, all time)
+ - Score verification
+ - Auth
  - Multiplayer
+ - Replay save/load/share

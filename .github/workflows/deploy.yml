@@ -1,4 +1,11 @@
-# Deploy the application to the production server (barelyfunctional.tech)
+# Deploy the application to the relevant server
+# The following secrets must be set:
+# - DEPLOY_HOST
+# - DEPLOY_USER
+# - STAGING_HOST
+# - STAGING_USER
+# - SSH_PRIVATE_KEY
+# - SSH_KNOWN_HOSTS
 
 name: deploy
 
@@ -6,17 +13,43 @@ on:
   push:
     branches:
       - master
+      - dev
+      - 2-docker
   
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Determine deploy target
+        id: dpl_setup
+        run: | 
+          if [$GITHUB_REF == '/refs/heads/master']
+          then
+              echo "::set-output name=host::$PROD_HOST"
+              echo "::set-output name=user::$PROD_USER"
+          else
+              echo "::set-output name=host::$DEV_HOST"
+              echo "::set-output name=user::$DEV_USER"
+          fi
+        env:
+          PROD_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEV_HOST: ${{ secrets.STAGING_HOST }}
+          PROD_USER: ${{ secrets.DEPLOY_USER }}
+          DEV_USER: ${{ secrets.STAGING_USER }}
       - name: Checkout files
         uses: actions/checkout@v2
+
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+          known_hosts: 'TEMP'
+
+      - name: Populate known hosts
+        run: ssh-keyscan ${{ steps.dpl_setup.outputs.host }} > ~/.ssh/known_hosts
+
       - name: Deploy with rsync
-        run: rsync -avz front/* ec2-user@barelyfunctional.tech:/usr/share/nginx/html/ 
+        run: rsync -avz ./* ${{ steps.dpl_setup.outputs.user }}@${{ steps.dpl_setup.outputs.host }}:/home/${{ steps.dpl_setup.outputs.user }}/${{ steps.dpl_setup.outputs.host }}/
+
+      - name: Reload docker containers on server
+        run: ssh ${{ steps.dpl_setup.outputs.user }}@${{ steps.dpl_setup.outputs.host }} cd ${{ steps.dpl_setup.outputs.host }};docker-compose down;docker-compose up -d
