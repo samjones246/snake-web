@@ -177,7 +177,9 @@ function gameOver(){
         highscore = score;
         window.localStorage["highscore"] = highscore
         highValLabel.textContent = String(score).padStart(3, "0")
+        enableScoreSubmitBox(score)
     }
+    enableScoreSubmitBox(score)
 }
 
 /*
@@ -221,6 +223,7 @@ function step() {
     Set state variables back to default values, ready for a new game to begin
 */
 function reset(){
+    disableScoreSubmitBox()
     inputBuffer = []
     direction = -1
     nextDir = -1

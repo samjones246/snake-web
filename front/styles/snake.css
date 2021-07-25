@@ -3,9 +3,12 @@
     src: url("../fonts/retro-gaming.ttf") format("truetype");
 }
 
+body {
+    font-family: "Retro";
+}
+
 .text {
     position: absolute;
-    font-family: "Retro";
     color: black;
     margin: 0;
 }
@@ -104,22 +107,70 @@ canvas {
     table-layout: fixed;
 }
 
-#scores_table td:nth-child(1),
-#scores_table td:nth-child(3) {
+#scores_table .rank,
+#scores_table .score {
     width: 10%;
     text-align: center;
+    padding-right: 5px;
 }
 
-#scores_table td:nth-child(2) {
+#scores_table .name {
     width: 80%;
-}
-.score_cell {
-    border-left: 2px solid rgb(30, 30, 30);
-    text-align: center;
 }
 
 .active {
     background-color: rgb(60, 60, 60);
+}
+
+#score_submit {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    height: 20%;
+    border: 2px solid rgb(30, 30, 30);
+    background-color: rgb(60, 60, 60);
+    opacity: 0.75;
+    color: white;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.score_submit_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 25%;
+    font-size: large;
+}
+
+.score_submit_entry {
+    display: flex;
+    align-items: center;
+    height: 50%;
+}
+
+.score_submit_entry span {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.score_submit_entry input {
+    flex-grow: 3;
+}
+
+.score_submit_controls {
+    display: flex;
+    height: 25%;
+}
+
+.score_submit_controls button {
+    flex-grow: 1;
 }
 
 .hoz-cent {

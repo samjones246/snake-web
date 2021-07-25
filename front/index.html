@@ -13,6 +13,17 @@
         <canvas id="canvas" class="hoz-cent"></canvas>
         <h1 class="text full-cent" id="pause" hidden>PAUSED</h1>
         <h2 class="text" id="gameover" hidden>Restart: ESC</h1>
+        <div id="score_submit" class="full-cent hidden">
+            <div class="score_submit_header">High Score!</div>
+            <div class="score_submit_entry">
+                <span>Name:</span>
+                <input id="submit_name">
+            </div>
+            <div class="score_submit_controls">
+                <button>SUBMIT</button>
+                <button hidden>CANCEL</button>
+            </div>
+        </div>
     </div>
 </div>
 <div id="panel">
@@ -80,6 +91,7 @@
     </div>
 </div>
 </body>
-<script src="scripts/snake.js" type="text/javascript"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="scripts/scores.js" type="text/javascript"></script>
+<script src="scripts/snake.js" type="text/javascript"></script>
 </html>

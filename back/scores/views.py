@@ -3,6 +3,7 @@ from django.http.response import HttpResponseBadRequest, JsonResponse
 from .models import HighScore
 from django.core import serializers
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 import logging
 
 logger = logging.getLogger(__name__)
@@ -37,10 +38,11 @@ def retrieve(request : HttpRequest, year=None, month=None, day=None):
         data = serializers.serialize("json", data)
     return HttpResponse(data)
 
+@csrf_exempt
 def submit(request : HttpRequest):
     # TODO: This should be POST
-    name = request.GET.get("name")
-    score = int(request.GET.get("score"))
+    name = request.POST.get("name")
+    score = int(request.POST.get("score"))
     timestamp=timezone.now()
     alltime = HighScore.objects.filter(name=name)
     yearly = alltime.filter(timestamp__year=timestamp.year)
