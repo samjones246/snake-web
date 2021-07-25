@@ -52,4 +52,4 @@ jobs:
         run: rsync -avz ./* ${{ steps.dpl_setup.outputs.user }}@${{ steps.dpl_setup.outputs.host }}:/home/${{ steps.dpl_setup.outputs.user }}/${{ steps.dpl_setup.outputs.host }}/
 
       - name: Reload docker containers on server
-        run: ssh ${{ steps.dpl_setup.outputs.user }}@${{ steps.dpl_setup.outputs.host }} cd ${{ steps.dpl_setup.outputs.host }};docker-compose down;docker-compose up
+        run: ssh ${{ steps.dpl_setup.outputs.user }}@${{ steps.dpl_setup.outputs.host }} cd ${{ steps.dpl_setup.outputs.host }};docker-compose down;docker-compose up -d
