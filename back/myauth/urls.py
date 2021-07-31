@@ -4,6 +4,5 @@ from django.urls.conf import include
 from . import views
 
 urlpatterns = [
-    path("", include("django.contrib.auth.urls")),
-    path("register", views.Register, name="register")
+    path("register", views.register, name="register")
 ]
